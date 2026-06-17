@@ -1,4 +1,4 @@
-# ABC Hospital Report Center
+# Hospital Report Center
 
 **End-to-end BI pipeline built entirely in Microsoft Fabric**
 
