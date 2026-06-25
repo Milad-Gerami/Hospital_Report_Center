@@ -140,7 +140,7 @@ DIVIDE(
 
 ## Fabric Trial Limitations and Workarounds
 
-Working in the Fabric free trial surfaces real architectural constraints. These are documented as interview talking points, not gaps.
+Working in the Fabric free trial surfaces real architectural constraints.
 
 | Limitation | Workaround |
 |---|---|
@@ -150,27 +150,6 @@ Working in the Fabric free trial surfaces real architectural constraints. These 
 | CDF required for semantic model table registration | Enable via Notebook: `ALTER TABLE ... SET TBLPROPERTIES ('delta.enableChangeDataFeed' = 'true')` |
 | OneDrive connector not available in trial | Upload CSV to public GitHub repository, connect via raw URL |
 | Semantic model not available as a standalone catalog item | Create only from inside the Lakehouse using the "New semantic model" ribbon button |
-
----
-
-## Key Concepts Demonstrated
-
-**Direct Lake vs Import vs DirectQuery**
-- Import copies data into the model's in-memory cache. Fast queries, stale between refreshes.
-- DirectQuery fires a live query to the source on every visual. Always current, but slower.
-- Direct Lake reads Parquet files directly from OneLake. No data copy, no live query overhead. Import-level speed, near-real-time freshness. Only available in Microsoft Fabric.
-
-**Dataflow Gen2 vs SSIS**
-Dataflow Gen2 is Power Query in the cloud - same M language, same transformation interface. The difference is the destination: instead of loading into a local Power BI model, it lands data into OneLake as a Delta table. Cloud-native SSIS with a Power Query interface.
-
-**Delta Table Structure**
-A Delta table is not a single file. It is a set of Parquet files (the actual data) plus a `_delta_log` folder (the transaction log). The delta log tracks every version, schema change, and operation - similar to a git commit history for data. Direct Lake reads the Parquet files and uses the delta log to determine the current state.
-
-**Month-Year Sort Pattern**
-When a time-based text column spans multiple years, sort it by a numeric key: `Year * 100 + Month`. This produces values that sort chronologically because the year is always the leading digits (e.g., 202501, 202502 ... 202512, 202601).
-
-**Live Connection in Power BI Desktop**
-When connected to a Fabric semantic model via Live Connection, Power BI Desktop is a read-only consumer - no table view, no local model, no schema changes from the Desktop side. Any measure or relationship change made in the semantic model propagates to every connected report automatically.
 
 ---
 
